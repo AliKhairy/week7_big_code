@@ -1,5 +1,5 @@
 #include "utilities.h"
-
+#include <stdio.h>
 int main()
 {
     // array of daily readings
@@ -21,7 +21,6 @@ int main()
     int counter = 0;
     float mean = 0;
     char date[100];
-
     while (1)
     {
         FILE *input = fopen(filename, "r");
@@ -133,18 +132,22 @@ int main()
         case 'e':
             
             printf("Please enter the date: ");
-            fgets(date, buffer_size, stdin);
-            sscanf(date, " %s ", filename);
+            scanf("%s", date);
             int counter = 0;
             while (fgets(line, buffer_size, input))
             {
-                tokeniseRecord(line, ",", daily_readings[counter].date, &daily_readings[counter].bloodIron);
-            }
-            for (int i = 0; i < counter; i++)
-            {
-                if (date == daily_readings[i].date)
+                counter++;
+                daily_readings[counter].bloodIron = 0;
+                if (strstr(line,date))
                 {
-                    printf("%f", daily_readings[i].bloodIron);
+                tokeniseRecord(line, ",", daily_readings[counter].date, &daily_readings[counter].bloodIron);
+                if (daily_readings[counter].bloodIron != 0)
+                {
+                    printf("%.1f", daily_readings[counter].bloodIron);
+                } else {
+                    printf("No tests were taken that day.\n");
+                }
+            
                 }
             }
             return 0;
